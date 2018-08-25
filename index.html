@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!-- use jquery and bootstrap -->
+    <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <script>window.$ = window.jQuery = require('jquery');</script>
+    <script src="./node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    <title>Electron app</title>
+
+    <style>
+        input[type=text], select {
+            width: 100%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        
+        input[type=submit] {
+            width: 100%;
+            background-color: #4CAF50;
+            color: white;
+            padding: 14px 20px;
+            margin: 8px 0;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        input[type=submit]:hover {
+            background-color: #45a049;
+        }
+        
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h2>Dynamic Tabs</h2>
+        <ul class="nav nav-tabs">
+            <li class="active">
+                <a data-toggle="tab" href="#home">
+                    <i class="glyphicon glyphicon-home"></i> Home</a>
+            </li>
+            <li>
+                <a data-toggle="tab" href="#page1">Connect Database</a>
+            </li>
+            <li>
+                <a data-toggle="tab" href="#page2">test</a>
+            </li>
+        </ul>
+
+        <div class="tab-content">
+            <div id="home" class="tab-pane fade in active">
+                <div style="margin-top:10px;">
+                    <div id='show-users-form'></div>
+                    <div id='show-users'></div>
+                </div>
+                <script> 
+                    require('./components/users/index.js');
+
+                    let webservice = require("./database/KnexMysql.js");
+                    
+                </script>
+            </div>
+            <div id="page1" class="tab-pane fade">
+                <div>
+                <form action="/action_page.php">
+                    <label for="fname">Host</label>
+                    <input type="text" id="host" name="host" placeholder="Your Host..">
+                
+                    <label for="lname">Username</label>
+                    <input type="text" id="user" name="user" placeholder="Your Username..">
+                
+                    <label for="lname">Password</label>
+                    <input type="text" id="user" name="user" placeholder="Your Password..">
+                
+                    <label for="lname">Database Name</label>
+                    <input type="text" id="dbname" name="dbname" placeholder="Your Database Name..">
+                
+                    <input type="submit" value="Submit">
+                </form>
+                </div>
+            </div>
+
+            <div id="page2" class="tab-pane fade">
+                <p>test1</p>
+
+            <script> 
+                // require('./components/users/index.js');
+
+                // let webservice = require("./database/KnexMysql.js");
+                LoadData();
+                $('#btnUpload').click(()=>{
+                    let data = $('#frm-test').serializeArray();
+                    let url = "http://backend.nocr.lc/ocr/check-answer/test";
+                    $.post(url,data,(res)=>{
+                        $("#msg").html("");
+                        $("#msg").html(res.msg);
+                        LoadData()
+                    });
+                })
+                
+                $("#btnLoad").click(()=>{
+                    LoadData();
+                });
+                function LoadData(){
+                    let url = "http://backend.nocr.lc/ocr/check-answer/load-data";
+                    $.get(url,(res)=>{
+                        for(let i of res){
+                            $("#show-data").perpend (i.fname + " " + i.lname + "<br>");
+                        }
+                    })
+                }
+                
+            </script>
+            </div>          
+        </div>
+    </div>
+</body>
+
+</html>
